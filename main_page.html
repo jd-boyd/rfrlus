@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rfrl.us</title>
+<link rel="stylesheet" type="text/css" href="style.css" title="default"/>
+</head>
+<body>
+
+<h1>Rfrl.us</h1>
+
+<form method='post' action='add'>
+<input type='text' name='r' size='60' />
+<input type='submit' value='Refer' />
+</form>
+<div class='mainBody'>
+<h2>What is this?</h2>
+
+<p>Do you find that when you post long URLs into an email that the
+  recipient says they don't work because they don't know about pasting
+  them back together?  Are you sick of piecing back together long URLs
+  that are emailed you you?
+</p>
+
+<p>ReferURL turns URLs like this:
+<pre>
+http://www.example.com/Item=BLAG876ADF36546DF?l
+=enood-Concert-classical-0221310353QQihZ019QQca
+tegoryZ?s=bobsurelonglonghardtocutandpaste=Will
+theyBother
+</pre>
+into this:
+<pre>
+http://rfrl.us/335
+</pre>
+</p>
+
+<h2>A handy tip</h2>
+
+<p>Drag the following bookmarklet to your bookmark toolbar.  Then when
+you click on it, the current page will be submitted to create a new ReferURL.</p>
+
+<p>
+<a
+href="javascript:location.href='http://rfrl.us/add?r='+encodeURIComponent(location.href)">Create Rfrl</a></p>
+</div>
+<hr/>
+
+<p>This service is brought to you by <a href='http://jdboyd.net/'>JDBoyd.net.</a></p>
+
+</body>
+
+</html>
