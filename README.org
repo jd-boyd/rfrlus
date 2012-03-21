@@ -1,0 +1,7 @@
+* ABOUT
+* REQUIREMENTS
+* INSTALLATION
+* HISTORY
+* COPYRIGHT
+  This is distributed as GPLv2.  Copyright is held by Joshua
+  Boyd. 
