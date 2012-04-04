@@ -27,25 +27,3 @@ def decodeV(v):
         t += rar[v[i]]
     return t
 
-if __name__=="__main__":
-    z = 2546
-    print "start", z
-    t = encodeV(z)
-    print repr(t)
-    print repr(decodeV(t))
-    
-    
-    z = 10000000
-    print "start", z
-    t = encodeV(z)
-    print repr(t)
-    print repr(decodeV(t))
-    
-    for i in range(10000000):
-        if not i%10000:
-            print "itr", i
-
-        t = encodeV(i)
-
-        if not i==decodeV(t):
-            print "FAIL", t, i
