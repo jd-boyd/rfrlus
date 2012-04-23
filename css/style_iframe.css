@@ -1,0 +1,33 @@
+body {
+  min-width: 400px;      /* 2x LC width + RC width */
+  font: 14px/1.5em sans-serif;
+  /*background-image: url("stripe_right.png");*/
+    /*background-repeat: repeat;*/
+    /*background-color: #BBB;*/
+    /*background-color: ##FFF6AA;*/
+
+    //    margin: 2px;
+    padding: 0px;
+}
+
+h1 {
+    font: 3em serif;
+    margin: 0px;
+    padding: 0px;
+    color: #0537B3;
+}
+
+h2,p {
+    margin: 2px;
+    padding: 0px;
+}
+
+
+a { 
+    /*text-decoration: none;*/
+    color: #0537B3;
+}
+
+div.mainBody {
+   width: 550px;
+}
