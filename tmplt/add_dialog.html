@@ -1,0 +1,68 @@
+<!DOCTYPE html> 
+<html>
+
+<head><link rel="stylesheet" type="text/css" href="css/style_iframe.css" title="default"/>
+
+<!--#     h.addHead("""
+# <script type='text/javascript'>
+#   var _gaq = _gaq || [];
+#   _gaq.push(['_setAccount', 'UA-18857050-3']);
+#   _gaq.push(['_trackPageview']);
+
+#   (function() {
+#     var ga = document.createElement('script'); ga.type =
+#     'text/javascript'; ga.async = true;
+#     ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+#     'http://www') + '.google-analytics.com/ga.js';
+#     var s = document.getElementsByTagName('script')[0];
+#     s.parentNode.insertBefore(ga, s);
+#   })();
+# </script>""")
+-->
+
+<title>rfrl.us: Add</title>
+    h.addScript('js/name.js')
+    h.addScript('js/ajax.js')
+
+
+</head>
+    <body>
+      <h1>rfrl.us</h1>
+
+    aURL = short.shortenAmazonUrl(url)
+    if aURL:
+        h.add(p("I noticed that the URL you are shortening is from Amazon.  Perhaps would would prefer a shorter Amazon URL to use:" + br() +ahref(aURL,aURL)))
+
+    eURL = short.shortenEbayUrl(url)
+    if eURL:
+        h.add(p("I noticed that the URL you are shortening is from eBay.  Perhaps would would prefer a shorter eBay URL to use:" + br() +ahref(eURL,eURL)))
+
+    p("Your shortcut is:" + ahref(shortcutUrl,shortcutUrl)))
+
+    h2('Mail it!'))
+    p("Click " + ahref('mailto:?body=' +shortcutUrl ,'here') + ' to open a message in your local mail program.'))
+
+    h2('Customize?'))
+    p("You are limited to a maximum of 20 characters.<br>  Special characters will be replaced with URL safe replacement characters."))
+    <div id="custom">
+
+    <div id="errField"></div>
+
+    if err=="" and not name=="":
+        namedShortcut = baseUrl + "r/" + name
+        <p>(ahref(namedShortcut,namedShortcut))</p>
+    else:
+
+        <form method="post" action="name" onsubmit="setName(); return false;" id="nameForm">
+        if not err=="":
+             <p>{{err}}</p>
+<!--#        h.add('<input type="hidden" name="u" value="' + u + '">\n')-->
+        baseUrl + 'r/<input type="text" name="n" value='+repr(name)+'><input type="submit" value="Name" />'
+        </form>
+    </div>
+
+    <hr/>
+    <p>This service is brought to you by <a href="http://jdboyd.net/">JDBoyd.net</a>.</p>
+
+</body>
+<html>

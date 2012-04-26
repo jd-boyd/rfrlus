@@ -1,17 +1,32 @@
 from __future__ import with_statement
 
 import os
+import re
+
 from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from rfrl_data import URL, dbAdd, dbGet
+from dehttp import deHTTP
+from html import *
+import short
+
+#baseUrl = "http://referurl.net/"
+baseUrl = "http://opt-vm:8080/"
+
+url_prefixs=[re.compile('^http://'), re.compile('^https://'),  re.compile('^about:'), re.compile('^ftp://')]
+
+def matchPre(url):
+    for r in url_prefixs:
+        if r.match(url): return True
+    return None
 
 class HomePage(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
 
-        with open(os.path.join(os.path.dirname(__file__), "main_page.html"), "r") as fh:
+        with open(os.path.join(os.path.dirname(__file__), "tmplt", "main_page.html"), "r") as fh:
             self.response.out.write("".join(fh.readlines()))
 
 class Add(webapp.RequestHandler):
@@ -36,29 +51,29 @@ class Add(webapp.RequestHandler):
         # val.ival = v + 1
         # val.put()
 
-def showAltAddPage(url, shortcutUrl, u, warn, err="", name=""):
+def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
     h=HDoc()
-    h.addHead('<link rel="stylesheet" type="text/css" href="style_iframe.css" title="default"/>')
-    h.addHead("""
-<script type='text/javascript'>
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-18857050-3']);
-  _gaq.push(['_trackPageview']);
+    h.addHead('<link rel="stylesheet" type="text/css" href="css/style_iframe.css" title="default"/>')
+#     h.addHead("""
+# <script type='text/javascript'>
+#   var _gaq = _gaq || [];
+#   _gaq.push(['_setAccount', 'UA-18857050-3']);
+#   _gaq.push(['_trackPageview']);
 
-  (function() {
-    var ga = document.createElement('script'); ga.type =
-    'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
-    'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(ga, s);
-  })();
-</script>""")
-    h.addHead(title('ReferURL: Add'))
-    h.addScript('name.js')
-    h.addScript('ajax.js')
+#   (function() {
+#     var ga = document.createElement('script'); ga.type =
+#     'text/javascript'; ga.async = true;
+#     ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+#     'http://www') + '.google-analytics.com/ga.js';
+#     var s = document.getElementsByTagName('script')[0];
+#     s.parentNode.insertBefore(ga, s);
+#   })();
+# </script>""")
+    h.addHead(title('rfrl.us: Add'))
+    h.addScript('js/name.js')
+    h.addScript('js/ajax.js')
     
-    h.add(h1("ReferURL"))
+    h.add(h1("rfrl.us"))
 
     aURL = short.shortenAmazonUrl(url)
     if aURL:
@@ -87,7 +102,7 @@ def showAltAddPage(url, shortcutUrl, u, warn, err="", name=""):
         h.add('<form method="post" action="name" onsubmit="setName(); return false;" id="nameForm">')
         if not err=="":
             h.add(p(err))
-        h.add('<input type="hidden" name="u" value="' + u + '">\n')
+#        h.add('<input type="hidden" name="u" value="' + u + '">\n')
         h.add(baseUrl + 'r/<input type="text" name="n" value='+repr(name)+'><input type="submit" value="Name" />')
         h.add('</form>')
     h.add('</div>')
@@ -100,7 +115,7 @@ def showAltAddPage(url, shortcutUrl, u, warn, err="", name=""):
 class AltAdd(webapp.RequestHandler):
     def get(self):
         warn=False
-        url = deHTTP(r)
+        url = deHTTP(self.request.get('r'))
 
         #Check if url matches one of url_prefixes.  If not, pre-pend http://
         if not matchPre(url): 
@@ -110,14 +125,13 @@ class AltAdd(webapp.RequestHandler):
         #string with IP in it.
         #I should log to DB
         #along with useragent
-        u=str(uuid.uuid4())
+        #u=str(uuid.uuid4())
 
-        bid = dbAdd(req, url, u)
+        bid = dbAdd("", url)
 
         shortcutUrl = baseUrl + str(bid)
-        #shortcutUrl = baseUrl + ref_enc.encodeV(bid)
 
-        self.response.out.write(showAltAddPage(url, shortcutUrl, u, warn))
+        self.response.out.write(showAltAddPage(url, shortcutUrl, warn))
 
 class Name(webapp.RequestHandler):
     pass

@@ -1,5 +1,8 @@
 * ABOUT
 * REQUIREMENTS
+
+pystache must be a symlink to the package.
+
 * INSTALLATION
 * HISTORY
 * COPYRIGHT
