@@ -7,6 +7,8 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+import pystache
+
 from rfrl_data import URL, dbAdd, dbGet
 from dehttp import deHTTP
 from html import *
@@ -22,12 +24,13 @@ def matchPre(url):
         if r.match(url): return True
     return None
 
+with open(os.path.join(os.path.dirname(__file__), "tmplt", "main_page.html"), "r") as fh:
+    main_page = "".join(fh.readlines())
+
 class HomePage(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-
-        with open(os.path.join(os.path.dirname(__file__), "tmplt", "main_page.html"), "r") as fh:
-            self.response.out.write("".join(fh.readlines()))
+        self.response.out.write(main_page)
 
 class Add(webapp.RequestHandler):
     pass
@@ -51,66 +54,25 @@ class Add(webapp.RequestHandler):
         # val.ival = v + 1
         # val.put()
 
+with open(os.path.join(os.path.dirname(__file__), "tmplt", "add_dialog.html"), "r") as fh:
+    add_dialog_tmplt = "".join(fh.readlines())
+
+
 def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
-    h=HDoc()
-    h.addHead('<link rel="stylesheet" type="text/css" href="css/style_iframe.css" title="default"/>')
-#     h.addHead("""
-# <script type='text/javascript'>
-#   var _gaq = _gaq || [];
-#   _gaq.push(['_setAccount', 'UA-18857050-3']);
-#   _gaq.push(['_trackPageview']);
-
-#   (function() {
-#     var ga = document.createElement('script'); ga.type =
-#     'text/javascript'; ga.async = true;
-#     ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
-#     'http://www') + '.google-analytics.com/ga.js';
-#     var s = document.getElementsByTagName('script')[0];
-#     s.parentNode.insertBefore(ga, s);
-#   })();
-# </script>""")
-    h.addHead(title('rfrl.us: Add'))
-    h.addScript('js/name.js')
-    h.addScript('js/ajax.js')
-    
-    h.add(h1("rfrl.us"))
-
     aURL = short.shortenAmazonUrl(url)
-    if aURL:
-        h.add(p("I noticed that the URL you are shortening is from Amazon.  Perhaps would would prefer a shorter Amazon URL to use:" + br() +ahref(aURL,aURL)))
-
     eURL = short.shortenEbayUrl(url)
-    if eURL:
-        h.add(p("I noticed that the URL you are shortening is from eBay.  Perhaps would would prefer a shorter eBay URL to use:" + br() +ahref(eURL,eURL)))
+    vals = {"aURL": aURL,
+            "eURL": eURL,
+            "baseUrl": baseUrl,
+            "shortcutUrl": shortcutUrl,
+            }
 
-    h.add(p("Your shortcut is:" + ahref(shortcutUrl,shortcutUrl)))
+#    if 
+#            "name": {
+#            "namedShortcut": baseUrl + "r/" + name 
+#            }
 
-    h.add(h2('Mail it!'))
-    h.add(p("Click " + ahref('mailto:?body=' +shortcutUrl ,'here') + ' to open a message in your local mail program.'))
-
-    h.add(h2('Customize?'))
-    h.add(p("You are limited to a maximum of 20 characters.<br>  Special characters will be replaced with URL safe replacement characters."))
-    h.add('<div id="custom">')
-
-    h.add('<div id="errField"></div>')
-
-    if err=="" and not name=="":
-        namedShortcut = baseUrl + "r/" + name
-        h.add(p(ahref(namedShortcut,namedShortcut)))
-    else:
-
-        h.add('<form method="post" action="name" onsubmit="setName(); return false;" id="nameForm">')
-        if not err=="":
-            h.add(p(err))
-#        h.add('<input type="hidden" name="u" value="' + u + '">\n')
-        h.add(baseUrl + 'r/<input type="text" name="n" value='+repr(name)+'><input type="submit" value="Name" />')
-        h.add('</form>')
-    h.add('</div>')
-
-    h.add(hr())
-    h.add(p("This service is brought to you by " + ahref('http://jdboyd.net/','JDBoyd.net') + '.'))
-    return h.output()
-
+    return pystache.render(add_dialog_tmplt, vals)
 
 class AltAdd(webapp.RequestHandler):
     def get(self):
