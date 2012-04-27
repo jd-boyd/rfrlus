@@ -33,26 +33,22 @@ class HomePage(webapp.RequestHandler):
         self.response.out.write(main_page)
 
 class Add(webapp.RequestHandler):
-    pass
-        # vals = KeyVal.gql("where keyStr='count' limit 1")
-        # val=None
+    def post(self):
+        self.get()
+    def get(self):
+        warn=False
+        url = deHTTP(self.request.get('r'))
 
-        # for v in vals:
-        #     val = v
+        #Check if url matches one of url_prefixes.  If not, pre-pend http://
+        if not matchPre(url): 
+            url = "http://" + url
+            warn=True
 
-        # if val==None:
-        #     val = KeyVal()
-        #     val.keyStr='count'
-        #     val.ival=1
+        bid = dbAdd("", url)
 
-        # try:
-        #     v = int(val.ival)
-        # except:
-        #     v=1
+        shortcutUrl = baseUrl + str(bid)
 
-        # self.response.out.write("<html><body><h1>rfrl.us</h1> <p>Hello " + repr(v) + "</p></body></html>")
-        # val.ival = v + 1
-        # val.put()
+        self.response.out.write(showAltAddPage(url, shortcutUrl, warn))
 
 with open(os.path.join(os.path.dirname(__file__), "tmplt", "add_dialog.html"), "r") as fh:
     add_dialog_tmplt = "".join(fh.readlines())
@@ -75,6 +71,9 @@ def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
     return pystache.render(add_dialog_tmplt, vals)
 
 class AltAdd(webapp.RequestHandler):
+    def POST(self):
+        self.GET()
+
     def get(self):
         warn=False
         url = deHTTP(self.request.get('r'))
@@ -102,19 +101,25 @@ class NameJs(webapp.RequestHandler):
     pass
 
 class Ref(webapp.RequestHandler):
-    pass
+    def get(self, r):
+        url = dbGet(r)
+        self.response.out.write("BOB:" + url.url)
+
+        self.redirect(url.url, permanent=True)
+
 # Keys are the exposed methods.
 #fcnDict = {'r': ref, 'add': add, 'addJs': addJs, 'altAdd': altAdd, 'createlink.php': createlink, 'name': name, 'nameJS': nameJS}
 
+url_map = [('/', HomePage),
+           #('/r', Ref),
+           ('/add', Add),
+           ('/altAdd', AltAdd),
+           ('/name', Name),
+           ('/nameJs', NameJs),
+           ('/([0-9A-Za-z_]+)', Ref),
+           ]
 
-application = webapp.WSGIApplication(
-                                     [('/', HomePage),
-                                      ('/r', Ref),
-                                      ('/add', Add),
-                                      ('/altAdd', AltAdd),
-                                      ('/name', Name),
-                                      ('/nameJs', NameJs)],
-                                     debug=True)
+application = webapp.WSGIApplication(url_map, debug=True)
 
 def main():
     run_wsgi_app(application)
