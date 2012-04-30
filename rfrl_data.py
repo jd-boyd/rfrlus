@@ -24,13 +24,14 @@ class URL(db.Model):
 
 COUNTER_NAME = "bid_cnt"
 
+def newId():
+    new_id = int(generalcounter.get_count(COUNTER_NAME))
+    generalcounter.increment(COUNTER_NAME)
+    return new_id
+
 def dbAdd(remote_ip, url):
-    """
-    >>> dbAdd("", "http://something")
-    ''
-    """
-    new_id = int(generalcounter.get_count("bid_cnt"))
-    generalcounter.increment("bid_cnt")
+    new_id = int(generalcounter.get_count(COUNTER_NAME))
+    generalcounter.increment(COUNTER_NAME)
 
     new_key = ref_enc.encodeV(new_id)
 
@@ -49,7 +50,7 @@ def dbAdd(remote_ip, url):
 def dbGet(key):
     """Key could be short_name or url_key"""
 
-    greetings = URL.all()
-    greetings.filter("url_key =", key)
+    urls = URL.all()
+    urls.filter("url_key =", key)
 
-    return greetings.fetch(1)[0]
+    return urls.fetch(1)[0]
