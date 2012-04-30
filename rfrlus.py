@@ -107,6 +107,11 @@ class Ref(webapp.RequestHandler):
 
         self.redirect(url.url, permanent=True)
 
+class Hello(webapp.RequestHandler):
+    def get(self):
+        self.response.out.write("Hello Bob")
+        
+
 # Keys are the exposed methods.
 #fcnDict = {'r': ref, 'add': add, 'addJs': addJs, 'altAdd': altAdd, 'createlink.php': createlink, 'name': name, 'nameJS': nameJS}
 
@@ -116,13 +121,15 @@ url_map = [('/', HomePage),
            ('/altAdd', AltAdd),
            ('/name', Name),
            ('/nameJs', NameJs),
+           ('/hello', Hello),
            ('/([0-9A-Za-z_]+)', Ref),
            ]
 
-application = webapp.WSGIApplication(url_map, debug=True)
+def application():
+    return webapp.WSGIApplication(url_map, debug=True)
 
 def main():
-    run_wsgi_app(application)
+    run_wsgi_app(application())
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,13 @@
 
 pystache must be a symlink to the package.
 
+requirements.txt lists packages needed for testing.  
+
 * INSTALLATION
+* TODO
+- Put back naming functionality
+- Redirect by name or key.
+- Don't allow duplicates of the name/key union
 * HISTORY
 * COPYRIGHT
   This is distributed as GPLv2.  Copyright is held by Joshua
