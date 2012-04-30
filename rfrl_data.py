@@ -25,6 +25,10 @@ class URL(db.Model):
 COUNTER_NAME = "bid_cnt"
 
 def dbAdd(remote_ip, url):
+    """
+    >>> dbAdd("", "http://something")
+    ''
+    """
     new_id = int(generalcounter.get_count("bid_cnt"))
     generalcounter.increment("bid_cnt")
 
