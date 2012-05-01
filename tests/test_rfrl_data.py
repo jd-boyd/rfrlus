@@ -1,6 +1,8 @@
+from __future__ import with_statement
+
 import datetime
 
-from nose.tools import ok_, eq_, with_setup
+from nose.tools import ok_, eq_, with_setup, assert_raises, raises
 import unittest
 
 import rfrl_data
@@ -30,12 +32,12 @@ def tearDown():
 
 def test_url():
     u = rfrl_data.URL(
-        url_id = 1,
-        url = "url",
+#        url_id = 1,
+        url = "http://url",
         url_key = "d",
         #short_name = db.StringProperty()
-        date_added = datetime.datetime.today(),
-        adding_ip = "",
+ #       date_added = datetime.datetime.today(),
+  #      adding_ip = "",
         )
     k = u.put()
     print "K", k
@@ -43,7 +45,7 @@ def test_url():
     urls = rfrl_data.URL.all()
     urls.filter("url_key =", "d")
 
-    eq_(urls.fetch(1)[0].url, "url")
+    eq_(urls.fetch(1)[0].url, "http://url")
 
 @with_setup(setUp, tearDown)
 def test_newid():
@@ -54,12 +56,23 @@ def test_newid2():
     eq_(rfrl_data.newId(), 0)
 
 @with_setup(setUp, tearDown)
-def test_add():
+def test_add_simplest():
     rfrl_data.newId() # First new ID on a clear datastore is ''
 
-    eq_(rfrl_data.dbAdd("", "http://something"), '6')
+    eq_(rfrl_data.dbAdd("http://something"), '6')
 
     eq_(rfrl_data.dbGet('6').url, "http://something")
+
+@with_setup(setUp, tearDown)
+@raises(rfrl_data.UniqueConstraintViolation)
+def test_add_dup():
+    rfrl_data.newId() # First new ID on a clear datastore is ''
+
+    
+    rfrl_data.dbInject("http://something", '6', "")
+
+    rfrl_data.dbAdd("http://somethingElse")
+
     
 
 
