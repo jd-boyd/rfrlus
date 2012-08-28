@@ -129,8 +129,9 @@ url_map = [('/', HomePage),
            ('/([0-9A-Za-z_]+)', Ref),
            ]
 
-def application():
-    return webapp.WSGIApplication(url_map, debug=True)
+#def application():
+#    return webapp.WSGIApplication(url_map, debug=True)
+application = webapp.WSGIApplication(url_map, debug=True)
 
 def main():
     run_wsgi_app(application())
