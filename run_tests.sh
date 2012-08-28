@@ -1,1 +1,1 @@
-nosetests --with-gae -v --exclude="pystache" 
+nosetests --with-gae -v

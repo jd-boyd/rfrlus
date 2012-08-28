@@ -7,15 +7,18 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import pystache
+import jinja2
+
+jinja_environment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 from rfrl_data import URL, dbAdd, dbGet
 from dehttp import deHTTP
 from html import *
 import short
 
-#baseUrl = "http://referurl.net/"
-baseUrl = "http://opt-vm:8080/"
+#baseUrl = "http://rfrl.us/"
+baseUrl = "http://192.168.56.101:8080/"
 
 url_prefixs=[re.compile('^http://'), re.compile('^https://'),  re.compile('^about:'), re.compile('^ftp://')]
 
@@ -68,7 +71,8 @@ def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
 #            "namedShortcut": baseUrl + "r/" + name 
 #            }
 
-    return pystache.render(add_dialog_tmplt, vals)
+    template = jinja_environment.get_template(add_dialog_tmplt, vals)
+    return template.render(vals)
 
 class AltAdd(webapp.RequestHandler):
     def POST(self):

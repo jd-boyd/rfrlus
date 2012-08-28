@@ -1,8 +1,6 @@
 * ABOUT
 * REQUIREMENTS
 
-pystache must be a symlink to the package.
-
 requirements.txt lists packages needed for testing.  
 
 * INSTALLATION
