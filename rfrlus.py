@@ -54,8 +54,8 @@ class Add(webapp.RequestHandler):
         self.response.out.write(showAltAddPage(url, shortcutUrl, warn))
 
 add_dialog_tmplt_path = os.path.join(os.path.dirname(__file__), "tmplt", "add_dialog.html")
-with open(add_dialog_tmplt_path, "r") as fh:
-    add_dialog_tmplt = "".join(fh.readlines())
+#with open(add_dialog_tmplt_path, "r") as fh:
+#    add_dialog_tmplt = "".join(fh.readlines())
 
 
 #add_dialog_tmplt = jinja_environment.get_template(add_dialog_tmplt_path)
@@ -69,8 +69,7 @@ def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
             "shortcutUrl": shortcutUrl,
             }
 
-    return jinja2.Template(add_dialog_tmplt).render(vals)
-#return add_dialog_tmplt.render(vals)
+    return jinja_environment.get_template(os.path.join( "tmplt", "add_dialog.html")).render(vals)
 
 class AltAdd(webapp.RequestHandler):
     def POST(self):
