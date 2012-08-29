@@ -10,7 +10,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 import jinja2
 
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+    loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'tmplt')))
 
 from rfrl_data import URL, dbAdd, dbGet
 from dehttp import deHTTP
@@ -27,17 +27,18 @@ def matchPre(url):
         if r.match(url): return True
     return None
 
-with open(os.path.join(os.path.dirname(__file__), "tmplt", "main_page.html"), "r") as fh:
-    main_page = "".join(fh.readlines())
+#with open(os.path.join(os.path.dirname(__file__), "tmplt", "main_page.html"), "r") as fh:
+#    main_page = "".join(fh.readlines())
 
 class HomePage(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.out.write(main_page)
+        self.response.out.write(jinja_environment.get_template("main_page.html").render())
 
 class Add(webapp.RequestHandler):
     def post(self):
         self.get()
+
     def get(self):
         warn=False
         url = deHTTP(self.request.get('r'))
@@ -53,13 +54,6 @@ class Add(webapp.RequestHandler):
 
         self.response.out.write(showAltAddPage(url, shortcutUrl, warn))
 
-add_dialog_tmplt_path = os.path.join(os.path.dirname(__file__), "tmplt", "add_dialog.html")
-#with open(add_dialog_tmplt_path, "r") as fh:
-#    add_dialog_tmplt = "".join(fh.readlines())
-
-
-#add_dialog_tmplt = jinja_environment.get_template(add_dialog_tmplt_path)
-
 def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
     aURL = short.shortenAmazonUrl(url)
     eURL = short.shortenEbayUrl(url)
@@ -69,7 +63,7 @@ def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
             "shortcutUrl": shortcutUrl,
             }
 
-    return jinja_environment.get_template(os.path.join( "tmplt", "add_dialog.html")).render(vals)
+    return jinja_environment.get_template("add_dialog.html").render(vals)
 
 class AltAdd(webapp.RequestHandler):
     def POST(self):
