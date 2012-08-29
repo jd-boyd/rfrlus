@@ -7,6 +7,8 @@ threadsafe: yes
 libraries:
 - name: jinja2
   version: latest
+- name: django
+  version: latest
 
 handlers:
 - url: /js
