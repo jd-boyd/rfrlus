@@ -47,15 +47,18 @@ class Add(webapp.RequestHandler):
             url = "http://" + url
             warn=True
 
-        bid = dbAdd("", url)
+        bid = dbAdd(url)
 
         shortcutUrl = baseUrl + str(bid)
 
         self.response.out.write(showAltAddPage(url, shortcutUrl, warn))
 
-with open(os.path.join(os.path.dirname(__file__), "tmplt", "add_dialog.html"), "r") as fh:
+add_dialog_tmplt_path = os.path.join(os.path.dirname(__file__), "tmplt", "add_dialog.html")
+with open(add_dialog_tmplt_path, "r") as fh:
     add_dialog_tmplt = "".join(fh.readlines())
 
+
+#add_dialog_tmplt = jinja_environment.get_template(add_dialog_tmplt_path)
 
 def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
     aURL = short.shortenAmazonUrl(url)
@@ -66,13 +69,8 @@ def showAltAddPage(url, shortcutUrl, warn, err="", name=""):
             "shortcutUrl": shortcutUrl,
             }
 
-#    if 
-#            "name": {
-#            "namedShortcut": baseUrl + "r/" + name 
-#            }
-
-    template = jinja_environment.get_template(add_dialog_tmplt, vals)
-    return template.render(vals)
+    return jinja2.Template(add_dialog_tmplt).render(vals)
+#return add_dialog_tmplt.render(vals)
 
 class AltAdd(webapp.RequestHandler):
     def POST(self):
@@ -92,7 +90,7 @@ class AltAdd(webapp.RequestHandler):
         #along with useragent
         #u=str(uuid.uuid4())
 
-        bid = dbAdd("", url)
+        bid = dbAdd(url)
 
         shortcutUrl = baseUrl + str(bid)
 

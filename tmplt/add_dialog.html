@@ -3,23 +3,6 @@
 
 <head><link rel="stylesheet" type="text/css" href="css/style_iframe.css" title="default"/>
 
-<!--#     h.addHead("""
-# <script type='text/javascript'>
-#   var _gaq = _gaq || [];
-#   _gaq.push(['_setAccount', 'UA-18857050-3']);
-#   _gaq.push(['_trackPageview']);
-
-#   (function() {
-#     var ga = document.createElement('script'); ga.type =
-#     'text/javascript'; ga.async = true;
-#     ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
-#     'http://www') + '.google-analytics.com/ga.js';
-#     var s = document.getElementsByTagName('script')[0];
-#     s.parentNode.insertBefore(ga, s);
-#   })();
-# </script>""")
--->
-
 <title>rfrl.us: Add</title>
     <script src='js/name.js'></script>
     <script src='js/ajax.js'></script>
@@ -28,17 +11,17 @@
     <body>
       <h1>rfrl.us</h1>
 
-    {{#aURL}}
+    {% if aURL %}
         <p>I noticed that the URL you are shortening is from Amazon.  Perhaps would would prefer a shorter Amazon URL to use: <br/>
 	  <a href="{{aURL}}">{{aURL}}</a></p>
-    {{/aURL}}
+    {% endif %}
 
-    {{#eURL}}
+
+    {% if eURL %}
         <p>I noticed that the URL you are shortening is from eBay.  Perhaps would would prefer a shorter eBay URL to use: <br/>
 	  <a href="{{eURL}}">{{eURL}}</a>
 	  </p>
-    {{/eURL}}
-
+    {% endif %}
     <p>Your shortcut is: <a href="{{shortcutUrl}}">{{shortcutUrl}}</a></p>
 
     <h2>Mail it!</h2>
@@ -53,18 +36,16 @@
 
     <div id="errField"></div>
 
-    {{#name}}
+    {% if name %}
         <p><a href="{{namedShortcut}}">{{namedShortcut}}</a></p>
-    {{/name}}
-    {{^name}}
+    {% endif %}
+    {% if not name %}
         <form method="post" action="name" onsubmit="setName(); return false;" id="nameForm">
-        <!--if not err=="":
-             <p>{{err}}</p> -->
-<!--#        h.add('<input type="hidden" name="u" value="' + u + '">\n')-->
         {{baseUrl}}r/<input type="text" name="n" value="{{name}}">
          <input type="submit" value="Name" />'
         </form>
-    {{/name}}
+    {% endif %}
+
     </div>
 
     <hr/>
