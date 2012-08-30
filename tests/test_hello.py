@@ -21,4 +21,10 @@ def test_add_blank():
 
 def test_add():
     resp = app.post('/add', {'r': 'http://bobsays.com'})
+    
+    print resp
+
+    assert "Your shortcut is: " in resp.unicode_body
+    assert '/6">http://' in resp.unicode_body
+
 
