@@ -27,9 +27,6 @@ def matchPre(url):
         if r.match(url): return True
     return None
 
-#with open(os.path.join(os.path.dirname(__file__), "tmplt", "main_page.html"), "r") as fh:
-#    main_page = "".join(fh.readlines())
-
 class HomePage(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
@@ -90,22 +87,42 @@ class AltAdd(webapp.RequestHandler):
         self.response.out.write(showAltAddPage(url, shortcutUrl, warn))
 
 class Name(webapp.RequestHandler):
-    pass
+    def POST(self):
+        self.GET()
 
+    def get(self):
+        u = self.request.get('u')
+        n = self.request.get('n')
+
+        self.response.out.write(showAltAddPage(u, 
+                                               shortcutUrl, warn, 
+                                               name=n))
 class NameJs(webapp.RequestHandler):
-    pass
+    def POST(self):
+        self.GET()
+
+    def get(self):
+        self.response.headers['Content-Type'] = 'application/json'
+
+        u = self.request.get('u')
+        n = self.request.get('n')
+
+        rd={'result': None, 'id': 0, 'error': None} #Response dictionary
+
+        self.response.out.write(json.dumps(rd))
+
 
 class Ref(webapp.RequestHandler):
     def get(self, r):
-        url = dbGet(r)
-        self.response.out.write("BOB:" + url.url)
+        try:
+            url = dbGet(r)
+        except IndexError:
+            print "SR:", dir(self.response)
+            self.response.set_status( 404 )
 
-        self.redirect(url.url, permanent=True)
+        #self.response.out.write("BOB:" + url.url)
 
-class Hello(webapp.RequestHandler):
-    def get(self):
-        self.response.out.write("Hello Bob")
-        
+        #self.redirect(url.url, permanent=True)
 
 # Keys are the exposed methods.
 #fcnDict = {'r': ref, 'add': add, 'addJs': addJs, 'altAdd': altAdd, 'createlink.php': createlink, 'name': name, 'nameJS': nameJS}
@@ -116,18 +133,8 @@ url_map = [('/', HomePage),
            ('/altAdd', AltAdd),
            ('/name', Name),
            ('/nameJs', NameJs),
-           ('/hello', Hello),
            ('/([0-9A-Za-z_]+)', Ref),
            ]
 
-#def application():
-#    return webapp.WSGIApplication(url_map, debug=True)
 application = webapp.WSGIApplication(url_map, debug=True)
-
-def main():
-    run_wsgi_app(application())
-
-if __name__ == "__main__":
-    main()
-
 
