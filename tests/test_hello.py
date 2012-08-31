@@ -4,13 +4,6 @@ from rfrlus import application
 
 app = TestApp(application)
 
-def test_index():
-    response = app.get('/hello')
-    assert 'Hello' in str(response)
-
-#def test_name():
-#    pass
-
 def test_add_blank():
     try:
         resp = app.post('/add', {'url': ''})
@@ -28,3 +21,21 @@ def test_add():
     assert '/6">http://' in resp.unicode_body
 
 
+def test_ref():
+    resp = app.post('/add', {'r': 'http://bobsays.com'})
+    
+    #should be /6
+
+    resp = app.get('/6', status=301)
+    print resp.headers['Location']
+    assert resp.headers['Location'] == 'http://bobsays.com'
+
+def test_ref_fail():
+    resp = app.post('/add', {'r': 'http://bobsays.com'})
+    
+    resp = app.get('/7', status=404)
+
+    
+
+#def test_name():
+#    pass
